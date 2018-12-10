@@ -2,11 +2,13 @@ import uuid from 'uuid'
 import database from '../firebase/firebase'
 
 // ADD_EXPENSE
+// manipulates the Redux store
 export const addExpense = (expense) => ({
     type: 'ADD_EXPENSE',
     expense
 })
 
+// manipulates the Firebase data
 export const startAddExpense = (expenseData = {}) => {
     // thunk middleware allows a function to be returned instead of an object
     return (dispatch) => {
@@ -38,3 +40,26 @@ export const editExpense = (id, updates) => ({
     id,
     updates
 })
+
+// SET_EXPENSES 
+// copies Firebase data to the Redux store
+export const setExpenses = (expenses) => ({
+    type: 'SET_EXPENSES',
+    expenses
+})
+
+// reads the Firebase data
+export const startSetExpenses = () => {
+    return (dispatch) => {
+        return database.ref('expenses').once('value').then((snapshot) => {
+            const expenses = []
+            snapshot.forEach((childSnapshot) => {
+                expenses.push({
+                    id: childSnapshot.key,
+                    ...childSnapshot.val()
+                })
+            })
+            dispatch(setExpenses(expenses))
+        })
+    }
+}
