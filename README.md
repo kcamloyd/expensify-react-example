@@ -8,5 +8,6 @@
 - Express
 - Heroku
 - Jest
+- Firebase
 
 [View the app on Heroku](https://expensify-react-example.herokuapp.com/)
